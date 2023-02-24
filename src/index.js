@@ -1,5 +1,6 @@
-const express = require('express')
-const { v4: uuidv4 } = require('uuid')
+const { response } = require('express');
+const express = require('express');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 app.use(express.json());
@@ -108,5 +109,27 @@ app.get("/statement/date", verifyIfExistAccountCPF, (req, res) => {
 
   return res.json(statement);
 });
+
+app.put("/account", verifyIfExistAccountCPF, (req, res) => {
+  const { name } = req.body;
+  const { customer } = req;
+
+
+  if (name === customer.name) {
+    return res.status(400).json({ error: "Insira um nome novo" })
+  } else {
+    customer.name = name;
+  }
+
+  return res.status(201).send();
+})
+
+app.get("/account", verifyIfExistAccountCPF, (req, res) => {
+  const { customer } = req;
+
+  return res.json(customer);
+})
+
+
 
 app.listen(3333);
